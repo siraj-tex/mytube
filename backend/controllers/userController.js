@@ -119,3 +119,25 @@ export const getSavedVideos = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Get public user profile and uploaded videos
+// @route   GET /api/users/profile/:id
+// @access  Public
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password -history -savedVideos -role -isBanned');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Lazy load Video to avoid circular dependency in standard export patterns
+    const Video = await import('../models/Video.js').then(m => m.default);
+    const videos = await Video.find({ uploader: req.params.id })
+        .populate('uploader', 'username avatar')
+        .sort({ createdAt: -1 });
+
+    res.status(200).json({ user, videos });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

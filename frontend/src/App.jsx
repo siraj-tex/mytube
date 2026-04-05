@@ -12,6 +12,7 @@ import History from './pages/Feed/History';
 import Subscriptions from './pages/Feed/Subscriptions';
 import SavedVideos from './pages/Feed/SavedVideos';
 import Shorts from './pages/Shorts/Shorts';
+import Profile from './pages/Profile/Profile';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './pages/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -38,6 +39,7 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/liked" element={<LikedVideos />} />
             <Route path="/saved" element={<SavedVideos />} />
+            <Route path="/profile/:id" element={<Profile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/upload" element={<Upload />} />

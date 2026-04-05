@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
 import { ThumbsUp, ThumbsDown, UserCircle, Share2, Save } from 'lucide-react';
@@ -114,13 +114,17 @@ const Watch = () => {
         
         <div className="watch-actions">
           <div className="channel-info">
-            {video.uploader?.avatar ? (
-              <img src={video.uploader.avatar} alt="avatar" className="channel-avatar" />
-            ) : (
-              <UserCircle size={40} />
-            )}
+            <Link to={`/profile/${video.uploader?._id}`}>
+              {video.uploader?.avatar ? (
+                <img src={video.uploader.avatar} alt="avatar" className="channel-avatar" />
+              ) : (
+                <UserCircle size={40} style={{color: 'var(--text-color)'}} />
+              )}
+            </Link>
             <div>
-              <div style={{fontWeight: 600}}>{video.uploader?.username}</div>
+              <Link to={`/profile/${video.uploader?._id}`} style={{textDecoration: 'none', color: 'var(--text-color)'}}>
+                <div style={{fontWeight: 600}}>{video.uploader?.username}</div>
+              </Link>
               <div style={{fontSize: 12, color: 'var(--text-color-secondary)'}}>{video.uploader?.subscribers || 0} subscribers</div>
             </div>
             <button 

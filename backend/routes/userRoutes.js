@@ -4,13 +4,16 @@ import {
   addHistory,
   getHistory,
   toggleSaveVideo,
-  getSavedVideos
+  getSavedVideos,
+  getUserProfile
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.put('/subscribe/:id', protect, toggleSubscribe);
+
+router.get('/profile/:id', getUserProfile);
 
 router.route('/history')
   .get(protect, getHistory);
