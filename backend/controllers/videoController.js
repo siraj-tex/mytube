@@ -5,7 +5,7 @@ import Video from '../models/Video.js';
 // @access  Private
 export const uploadVideo = async (req, res) => {
   try {
-    const { title, description, tags } = req.body;
+    const { title, description, tags, isShort } = req.body;
     
     // Expecting req.files to contain 'video' and 'thumbnail'
     if (!req.files || !req.files.video || !req.files.thumbnail) {
@@ -28,6 +28,7 @@ export const uploadVideo = async (req, res) => {
       thumbnailUrl,
       uploader: req.user._id,
       tags: parsedTags,
+      isShort: isShort === 'true' || isShort === true,
     });
 
     res.status(201).json(video);
@@ -122,6 +123,47 @@ export const likeVideo = async (req, res) => {
 
     await video.save();
     res.status(200).json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get liked videos
+// @route   GET /api/videos/liked
+// @access  Private
+export const getLikedVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ likes: req.user._id }).populate('uploader', 'username avatar');
+    res.status(200).json(videos);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get subscriptions videos
+// @route   GET /api/videos/subscriptions
+// @access  Private
+export const getSubscriptionsVideos = async (req, res) => {
+  try {
+    const user = await import('../models/User.js').then(m => m.default).then(User => User.findById(req.user._id));
+    const videos = await Video.find({ uploader: { $in: user.subscribedChannels } })
+      .populate('uploader', 'username avatar')
+      .sort({ createdAt: -1 });
+    res.status(200).json(videos);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get shorts
+// @route   GET /api/videos/shorts
+// @access  Public
+export const getShortsVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ isShort: true })
+      .populate('uploader', 'username avatar')
+      .sort({ createdAt: -1 });
+    res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -11,6 +11,8 @@ const Watch = () => {
   const [video, setVideo] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,8 +25,13 @@ const Watch = () => {
         const commentsData = await axios.get(`/api/comments/${id}`);
         setComments(commentsData.data);
 
-        // Increment view count since we opened it Let's not await this so it doesn't block
-        axios.put(`/api/videos/${id}/view`);
+        // Increment view count since we opened it
+        axios.put(`/api/videos/${id}/view`).catch(console.error);
+
+        // Add to history if logged in
+        if (user) {
+          axios.put(`/api/users/history/${id}`).catch(console.error);
+        }
       } catch (error) {
         console.error('Error fetching video', error);
       }
@@ -40,6 +47,36 @@ const Watch = () => {
     } catch (error) {
       console.error('Error liking video', error);
     }
+  };
+
+  const handleSubscribe = async () => {
+    if (!user) return alert('Please login to subscribe');
+    try {
+      const { data } = await axios.put(`/api/users/subscribe/${video.uploader._id}`);
+      setIsSubscribed(!isSubscribed);
+      setVideo(prev => ({ 
+        ...prev, 
+        uploader: { ...prev.uploader, subscribers: data.subscribers } 
+      }));
+    } catch (error) {
+      console.error('Error subscribing', error);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!user) return alert('Please login to save');
+    try {
+      await axios.put(`/api/users/save/${id}`);
+      setIsSaved(!isSaved);
+      alert(isSaved ? 'Video removed from saved' : 'Video saved to library');
+    } catch (error) {
+      console.error('Error saving video', error);
+    }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied to clipboard!');
   };
 
   const handleCommentSubmit = async (e) => {
@@ -86,7 +123,13 @@ const Watch = () => {
               <div style={{fontWeight: 600}}>{video.uploader?.username}</div>
               <div style={{fontSize: 12, color: 'var(--text-color-secondary)'}}>{video.uploader?.subscribers || 0} subscribers</div>
             </div>
-            <button className="subscribe-btn">Subscribe</button>
+            <button 
+              className="subscribe-btn" 
+              onClick={handleSubscribe}
+              style={{ backgroundColor: isSubscribed ? 'var(--bg-color-secondary)' : 'var(--text-color)', color: isSubscribed ? 'var(--text-color)' : 'var(--bg-color)' }}
+            >
+              {isSubscribed ? 'Subscribed' : 'Subscribe'}
+            </button>
           </div>
 
           <div className="video-stats">
@@ -97,8 +140,10 @@ const Watch = () => {
             <button className="action-btn">
               <ThumbsDown size={18} fill={user && video.dislikes?.includes(user._id) ? "currentColor" : "none"} />
             </button>
-            <button className="action-btn"><Share2 size={18} /> Share</button>
-            <button className="action-btn"><Save size={18} /> Save</button>
+            <button className="action-btn" onClick={handleShare}><Share2 size={18} /> Share</button>
+            <button className="action-btn" onClick={handleSave}>
+              <Save size={18} fill={isSaved ? "currentColor" : "none"} /> {isSaved ? 'Saved' : 'Save'}
+            </button>
           </div>
         </div>
 

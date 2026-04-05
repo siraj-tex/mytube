@@ -7,6 +7,11 @@ import Register from './pages/Auth/Register';
 import Home from './pages/Home/Home';
 import Watch from './pages/Watch/Watch';
 import Upload from './pages/Upload/Upload';
+import LikedVideos from './pages/Feed/LikedVideos';
+import History from './pages/Feed/History';
+import Subscriptions from './pages/Feed/Subscriptions';
+import SavedVideos from './pages/Feed/SavedVideos';
+import Shorts from './pages/Shorts/Shorts';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './pages/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -28,6 +33,11 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/shorts" element={<Shorts />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/liked" element={<LikedVideos />} />
+            <Route path="/saved" element={<SavedVideos />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/upload" element={<Upload />} />

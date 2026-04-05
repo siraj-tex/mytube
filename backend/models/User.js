@@ -41,6 +41,18 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    history: [
+      {
+        videoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Video' },
+        watchedAt: { type: Date, default: Date.now },
+      },
+    ],
+    savedVideos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Video',
+      },
+    ],
   },
   { timestamps: true }
 );

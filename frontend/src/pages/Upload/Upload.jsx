@@ -9,6 +9,7 @@ const Upload = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
+  const [isShort, setIsShort] = useState(false);
   const [videoFile, setVideoFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ const Upload = () => {
     formData.append('title', title);
     formData.append('description', description);
     formData.append('tags', tags);
+    formData.append('isShort', isShort);
     formData.append('video', videoFile);
     formData.append('thumbnail', thumbnailFile);
 
@@ -85,6 +87,17 @@ const Upload = () => {
               placeholder="coding, react, tutorial"
               onChange={(e) => setTags(e.target.value)} 
             />
+          </div>
+
+          <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <input 
+              type="checkbox" 
+              id="isShort"
+              checked={isShort} 
+              onChange={(e) => setIsShort(e.target.checked)} 
+              style={{ padding: 0, width: 'auto' }}
+            />
+            <label htmlFor="isShort" style={{ fontSize: 16 }}>Upload as a Short (Vertical Video)</label>
           </div>
 
           <div className="form-group">

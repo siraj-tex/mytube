@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Home, Compass, PlaySquare, Clock, ThumbsUp, Flame, Gamepad2, Film } from 'lucide-react';
+import { Home, Compass, PlaySquare, Clock, ThumbsUp, Flame, Gamepad2, Film, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
 import { AuthContext } from '../context/AuthContext';
@@ -9,13 +9,14 @@ const Sidebar = ({ isOpen }) => {
 
   const mainLinks = [
     { name: 'Home', icon: <Home size={24} />, path: '/' },
-    { name: 'Shorts', icon: <Compass size={24} />, path: '/' },
-    { name: 'Subscriptions', icon: <PlaySquare size={24} />, path: '/' },
+    { name: 'Shorts', icon: <Compass size={24} />, path: '/shorts' },
+    { name: 'Subscriptions', icon: <PlaySquare size={24} />, path: '/subscriptions' },
   ];
 
   const userLinks = [
-    { name: 'History', icon: <Clock size={24} />, path: '/' },
-    { name: 'Liked Videos', icon: <ThumbsUp size={24} />, path: '/' },
+    { name: 'History', icon: <Clock size={24} />, path: '/history' },
+    { name: 'Liked Videos', icon: <ThumbsUp size={24} />, path: '/liked' },
+    { name: 'Saved Videos', icon: <Save size={24} />, path: '/saved' },
   ];
 
   const exploreLinks = [

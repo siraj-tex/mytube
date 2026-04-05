@@ -5,11 +5,18 @@ import {
   getVideoById,
   incrementView,
   likeVideo,
+  getLikedVideos,
+  getSubscriptionsVideos,
+  getShortsVideos
 } from '../controllers/videoController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
+
+router.get('/liked', protect, getLikedVideos);
+router.get('/subscriptions', protect, getSubscriptionsVideos);
+router.get('/shorts', getShortsVideos);
 
 router.route('/')
   .get(getVideos)
