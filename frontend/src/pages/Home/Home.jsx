@@ -28,14 +28,30 @@ const Home = () => {
 
   if (loading) return <div>Loading...</div>;
 
+  const longVideos = videos.filter(v => !v.isShort);
+  const shortVideos = videos.filter(v => v.isShort);
+
   return (
-    <div>
-      {searchQuery && <h3>Search Results for "{searchQuery}"</h3>}
+    <div className="home-container">
+      {shortVideos.length > 0 && (
+        <div className="shorts-shelf-section">
+          <h2>Shorts</h2>
+          <div className="shorts-shelf">
+            {shortVideos.map((video) => (
+              <div key={video._id} className="shorts-shelf-card">
+                <VideoCard video={video} hideChannelInfo={true} />
+              </div>
+            ))}
+          </div>
+          <hr className="shelf-divider" />
+        </div>
+      )}
+
       <div className="home-feed">
-        {videos.length === 0 ? (
+        {longVideos.length === 0 ? (
           <div>No videos found</div>
         ) : (
-          videos.map((video) => (
+          longVideos.map((video) => (
             <VideoCard key={video._id} video={video} />
           ))
         )}

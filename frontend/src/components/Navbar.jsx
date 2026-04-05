@@ -61,11 +61,13 @@ const Navbar = ({ toggleSidebar }) => {
               <Bell size={24} />
             </button>
             <div className="profile-menu" style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-              {user.avatar ? (
-                <img src={user.avatar} alt="avatar" className="avatar" />
-              ) : (
-                <UserCircle size={32} />
-              )}
+              <Link to={`/profile/${user._id}`}>
+                {user.avatar ? (
+                  <img src={user.avatar} alt="avatar" className="avatar" />
+                ) : (
+                  <UserCircle size={32} style={{color: 'var(--text-color)'}} />
+                )}
+              </Link>
               {user.role === 'admin' && (
                  <Link to="/admin" className="btn btn-primary" style={{fontSize: '12px', padding: '6px 12px'}}>Admin</Link>
               )}

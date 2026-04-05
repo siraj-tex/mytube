@@ -5,15 +5,26 @@ import {
   getHistory,
   toggleSaveVideo,
   getSavedVideos,
-  getUserProfile
+  getUserProfile,
+  updateProfile,
+  createCommunityPost,
+  getCommunityPosts
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
+import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
 router.put('/subscribe/:id', protect, toggleSubscribe);
 
+router.route('/profile')
+  .put(protect, upload.fields([{ name: 'avatar', maxCount: 1 }]), updateProfile);
+
 router.get('/profile/:id', getUserProfile);
+
+router.route('/community')
+  .post(protect, createCommunityPost);
+router.get('/community/:userId', getCommunityPosts);
 
 router.route('/history')
   .get(protect, getHistory);

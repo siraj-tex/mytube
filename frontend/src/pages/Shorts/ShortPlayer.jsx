@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, UserCircle, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import ShortsCommentsPanel from './ShortsCommentsPanel';
 import './Shorts.css';
 
 const ShortPlayer = ({ video, isActive }) => {
@@ -10,6 +11,7 @@ const ShortPlayer = ({ video, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [likes, setLikes] = useState(video.likes || []);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -102,10 +104,10 @@ const ShortPlayer = ({ video, isActive }) => {
              <ThumbsDown size={28} />
              <span>Dislike</span>
           </button>
-          <Link to={`/watch/${video._id}`} className="short-action-btn" style={{textDecoration: 'none'}}>
+          <button className="short-action-btn" onClick={() => setShowComments(true)}>
              <MessageSquare size={28} />
              <span>{video.commentsCount || 'Views ' + video.views}</span>
-          </Link>
+          </button>
           <button className="short-action-btn" onClick={handleShare}>
              <Share2 size={28} />
              <span>Share</span>
@@ -137,6 +139,11 @@ const ShortPlayer = ({ video, isActive }) => {
             {video.title}
           </div>
         </div>
+
+        {/* Comments Overlay */}
+        {showComments && (
+           <ShortsCommentsPanel videoId={video._id} onClose={() => setShowComments(false)} />
+        )}
       </div>
     </div>
   );
