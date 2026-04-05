@@ -8,7 +8,9 @@ import {
   dislikeVideo,
   getLikedVideos,
   getSubscriptionsVideos,
-  getShortsVideos
+  getShortsVideos,
+  toggleMonetize,
+  registerAdView
 } from '../controllers/videoController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -34,5 +36,7 @@ router.route('/:id').get(getVideoById);
 router.route('/:id/view').put(incrementView);
 router.route('/:id/like').put(protect, likeVideo);
 router.route('/:id/dislike').put(protect, dislikeVideo);
+router.route('/:id/monetize').put(protect, toggleMonetize);
+router.route('/:id/ad-view').post(registerAdView);
 
 export default router;

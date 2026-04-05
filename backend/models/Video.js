@@ -47,6 +47,14 @@ const videoSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isMonetized: {
+      type: Boolean,
+      default: false,
+    },
+    monetizedViews: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

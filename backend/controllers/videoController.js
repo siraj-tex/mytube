@@ -196,3 +196,64 @@ export const getShortsVideos = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Toggle monetization for a video
+// @route   PUT /api/videos/:id/monetize
+// @access  Private
+export const toggleMonetize = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    // Ensure the requester is the uploader
+    if (video.uploader.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to change this video' });
+    }
+
+    video.isMonetized = !video.isMonetized;
+    await video.save();
+
+    res.status(200).json({ isMonetized: video.isMonetized });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Register an ad view and update earnings
+// @route   POST /api/videos/:id/ad-view
+// @access  Public
+export const registerAdView = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+    
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    if (video.isMonetized) {
+      const SystemConfig = (await import('../models/SystemConfig.js')).default;
+      const User = (await import('../models/User.js')).default;
+
+      let config = await SystemConfig.findOne();
+      const currentRPM = config ? config.rpm : 1;
+
+      const earned = currentRPM / 10;
+
+      // Increment video monetizedViews
+      video.monetizedViews += 1;
+      await video.save();
+
+      // Update uploader earnings
+      await User.findByIdAndUpdate(video.uploader, {
+        $inc: { accumulatedEarnings: earned }
+      });
+    }
+
+    res.status(200).json({ message: 'Ad view registered' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

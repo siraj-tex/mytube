@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import VideoCard from '../../components/VideoCard';
 import EditProfileModal from '../../components/EditProfileModal';
 import CommunityTab from '../../components/CommunityTab';
+import MonetizationTab from '../../components/MonetizationTab';
 import './Profile.css';
 import '../Home/Home.css';
 
@@ -112,6 +113,9 @@ const Profile = () => {
           <div className={`profile-nav-item ${activeTab === 'Shorts' ? 'active' : ''}`} onClick={() => setActiveTab('Shorts')}>Shorts</div>
           <div className={`profile-nav-item ${activeTab === 'Playlists' ? 'active' : ''}`} onClick={() => setActiveTab('Playlists')}>Playlists</div>
           <div className={`profile-nav-item ${activeTab === 'Community' ? 'active' : ''}`} onClick={() => setActiveTab('Community')}>Community</div>
+          {isOwnProfile && (
+            <div className={`profile-nav-item ${activeTab === 'Monetization' ? 'active' : ''}`} onClick={() => setActiveTab('Monetization')}>Monetization</div>
+          )}
         </div>
       </div>
 
@@ -146,6 +150,10 @@ const Profile = () => {
 
         {activeTab === 'Community' && (
           <CommunityTab channelId={id} />
+        )}
+
+        {activeTab === 'Monetization' && isOwnProfile && (
+          <MonetizationTab profileUser={profileUser} videos={videos} />
         )}
       </div>
 

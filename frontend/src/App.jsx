@@ -18,6 +18,8 @@ import AdminLayout from './pages/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/AdminUsers';
 import AdminVideos from './pages/Admin/AdminVideos';
+import AdminAds from './pages/Admin/AdminAds';
+import AdminSettings from './pages/Admin/AdminSettings';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -49,6 +51,8 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="users" element={<AdminUsers />} />
               <Route path="videos" element={<AdminVideos />} />
+              <Route path="ads" element={<AdminAds />} />
+              <Route path="settings" element={<AdminSettings />} />
             </Route>
           </Routes>
         </main>

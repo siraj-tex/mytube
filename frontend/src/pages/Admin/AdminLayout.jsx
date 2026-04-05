@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Users, Video } from 'lucide-react';
+import { LayoutDashboard, Users, Video, PlaySquare, Settings } from 'lucide-react';
 import './Admin.css';
 
 const AdminLayout = () => {
@@ -18,6 +18,14 @@ const AdminLayout = () => {
         <Link to="/admin/videos" className="admin-nav-item">
           <Video size={20} />
           Videos
+        </Link>
+        <Link to="/admin/ads" className="admin-nav-item">
+          <PlaySquare size={20} />
+          Ads
+        </Link>
+        <Link to="/admin/settings" className="admin-nav-item">
+          <Settings size={20} />
+          Settings
         </Link>
       </div>
       <div className="admin-content">

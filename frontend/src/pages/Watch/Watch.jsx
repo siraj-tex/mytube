@@ -15,6 +15,12 @@ const Watch = () => {
   const [isSaved, setIsSaved] = useState(false);
   const { user } = useContext(AuthContext);
 
+  // Monetization Ad States
+  const [ad, setAd] = useState(null);
+  const [showAd, setShowAd] = useState(false);
+  const [adTimeLeft, setAdTimeLeft] = useState(5);
+  const [canSkipAd, setCanSkipAd] = useState(false);
+
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
@@ -28,6 +34,19 @@ const Watch = () => {
         // Increment view count since we opened it
         axios.put(`/api/videos/${id}/view`).catch(console.error);
 
+        // Fetch random ad if the video is not short
+        if (!data.isShort) {
+          try {
+            const adRes = await axios.get('/api/ads/random');
+            if (adRes.data) {
+              setAd(adRes.data);
+              setShowAd(true);
+            }
+          } catch (err) {
+            console.log('No ads available or failed to fetch ad');
+          }
+        }
+
         // Add to history if logged in
         if (user) {
           axios.put(`/api/users/history/${id}`).catch(console.error);
@@ -37,7 +56,30 @@ const Watch = () => {
       }
     };
     fetchVideoData();
-  }, [id]);
+  }, [id, user]);
+
+  // Handle Ad Timer
+  useEffect(() => {
+    let timer;
+    if (showAd && adTimeLeft > 0) {
+      timer = setInterval(() => {
+        setAdTimeLeft(prev => prev - 1);
+      }, 1000);
+    } else if (showAd && adTimeLeft === 0) {
+      setCanSkipAd(true);
+    }
+    return () => clearInterval(timer);
+  }, [showAd, adTimeLeft]);
+
+  const handleSkipAd = async () => {
+    setShowAd(false);
+    // Register Ad View
+    try {
+      await axios.post(`/api/videos/${id}/ad-view`);
+    } catch (error) {
+      console.error('Error logging ad view', error);
+    }
+  };
 
   const handleLike = async () => {
     if (!user) return alert('Please login to like');
@@ -107,8 +149,28 @@ const Watch = () => {
   return (
     <div className="watch-container">
       <div className="watch-main">
-        <div className="video-player">
-          <video src={video.videoUrl} controls autoPlay></video>
+        <div className="video-player-container">
+          {showAd && ad ? (
+            <div className="ad-overlay">
+              <div className="ad-content">
+                {ad.type === 'video' ? (
+                  <video src={ad.mediaUrl} autoPlay controls={false} disablePictureInPicture muted={false} className="ad-media"></video>
+                ) : (
+                  <img src={ad.mediaUrl} alt={ad.title} className="ad-media" />
+                )}
+              </div>
+              <div className="ad-badge">Advertisement - {ad.title}</div>
+              <div className="skip-ad-container">
+                {canSkipAd ? (
+                  <button onClick={handleSkipAd} className="skip-ad-btn">Skip Ad ⏭</button>
+                ) : (
+                  <div className="skip-ad-timer">You can skip in {adTimeLeft}s</div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <video src={video.videoUrl} controls autoPlay className="main-video-player"></video>
+          )}
         </div>
         <h1 className="video-player-title">{video.title}</h1>
         
