@@ -10,6 +10,7 @@ const ShortPlayer = ({ video, isActive }) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [likes, setLikes] = useState(video.likes || []);
+  const [dislikes, setDislikes] = useState(video.dislikes || []);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const { user } = useContext(AuthContext);
@@ -54,8 +55,20 @@ const ShortPlayer = ({ video, isActive }) => {
     try {
       const { data } = await axios.put(`/api/videos/${video._id}/like`);
       setLikes(data.likes);
+      setDislikes(data.dislikes || []);
     } catch (error) {
       console.error('Error liking video', error);
+    }
+  };
+
+  const handleDislike = async () => {
+    if (!user) return alert('Please login to dislike');
+    try {
+      const { data } = await axios.put(`/api/videos/${video._id}/dislike`);
+      setLikes(data.likes || []);
+      setDislikes(data.dislikes);
+    } catch (error) {
+      console.error('Error disliking video', error);
     }
   };
 
@@ -75,6 +88,7 @@ const ShortPlayer = ({ video, isActive }) => {
   };
 
   const isLiked = user && likes.includes(user._id);
+  const isDisliked = user && dislikes.includes(user._id);
 
   return (
     <div className="short-container">
@@ -100,11 +114,11 @@ const ShortPlayer = ({ video, isActive }) => {
              <ThumbsUp size={28} fill={isLiked ? "currentColor" : "none"} />
              <span>{likes.length}</span>
           </button>
-          <button className="short-action-btn">
-             <ThumbsDown size={28} />
+          <button className={`short-action-btn ${isDisliked ? 'active' : ''}`} onClick={handleDislike}>
+             <ThumbsDown size={28} fill={isDisliked ? "currentColor" : "none"} />
              <span>Dislike</span>
           </button>
-          <button className="short-action-btn" onClick={() => setShowComments(true)}>
+          <button className="short-action-btn" onClick={(e) => { e.stopPropagation(); setShowComments(true); }}>
              <MessageSquare size={28} />
              <span>{video.commentsCount || 'Views ' + video.views}</span>
           </button>

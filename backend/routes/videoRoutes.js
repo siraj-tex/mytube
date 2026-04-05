@@ -5,6 +5,7 @@ import {
   getVideoById,
   incrementView,
   likeVideo,
+  dislikeVideo,
   getLikedVideos,
   getSubscriptionsVideos,
   getShortsVideos
@@ -32,5 +33,6 @@ router.route('/')
 router.route('/:id').get(getVideoById);
 router.route('/:id/view').put(incrementView);
 router.route('/:id/like').put(protect, likeVideo);
+router.route('/:id/dislike').put(protect, dislikeVideo);
 
 export default router;

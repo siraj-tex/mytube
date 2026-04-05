@@ -128,6 +128,34 @@ export const likeVideo = async (req, res) => {
   }
 };
 
+// @desc    Dislike a video
+// @route   PUT /api/videos/:id/dislike
+// @access  Private
+export const dislikeVideo = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    if (video.dislikes.includes(req.user._id)) {
+      // Remove dislike
+      video.dislikes = video.dislikes.filter((id) => id.toString() !== req.user._id.toString());
+    } else {
+      // Add dislike
+      video.dislikes.push(req.user._id);
+      // Remove from likes if present
+      video.likes = video.likes.filter((id) => id.toString() !== req.user._id.toString());
+    }
+
+    await video.save();
+    res.status(200).json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Get liked videos
 // @route   GET /api/videos/liked
 // @access  Private

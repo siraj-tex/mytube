@@ -49,7 +49,7 @@ const ShortsCommentsPanel = ({ videoId, onClose }) => {
   };
 
   return (
-    <div className="shorts-comments-panel" style={{
+    <div className="shorts-comments-panel" onClick={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} style={{
       position: 'absolute', right: 0, bottom: 0, width: '100%', height: '70%',
       backgroundColor: 'var(--bg-color)', borderTopLeftRadius: 16, borderTopRightRadius: 16,
       display: 'flex', flexDirection: 'column', zIndex: 100,
