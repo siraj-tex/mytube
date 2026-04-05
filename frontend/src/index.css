@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Light Theme */
+  --bg-color: #f9f9f9;
+  --bg-color-secondary: #ffffff;
+  --text-color: #0f0f0f;
+  --text-color-secondary: #606060;
+  --border-color: #e5e5e5;
+  --primary-color: #cc0000;
+  --hover-color: #e5e5e5;
+  --sidebar-hover: #f2f2f2;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme */
+  --bg-color: #0f0f0f;
+  --bg-color-secondary: #212121;
+  --text-color: #f1f1f1;
+  --text-color-secondary: #aaaaaa;
+  --border-color: #3d3d3d;
+  --primary-color: #ff0000;
+  --hover-color: #3f3f3f;
+  --sidebar-hover: #272727;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+/* Utilities */
+.container {
+  display: flex;
+  height: calc(100vh - 60px); /* 60px is Navbar height */
+  margin-top: 60px;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--bg-color-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+.btn-primary:hover {
+  background-color: var(--hover-color);
+}
+
+.btn-danger {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #cc0000;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-color-secondary);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+}
